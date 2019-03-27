@@ -8,6 +8,6 @@ https://pythonchb.github.io/PythonListsSummaries/
 ## Contributing
 
 These pages are intended to be community supported.  If you have a new page
-you'd like to contribute, or have suggestions for imprving existing pages,
+you'd like to contribute, or have suggestions for improving existing pages,
 please post and issue, or better yet, a PR on this repo.
 

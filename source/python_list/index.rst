@@ -20,3 +20,4 @@ The following are summaries of commonly asked questions of general interest:
    inheritance_terminology
    why_does___ne___exist
    where_did_csv_parser_go
+   purpose_of___version___in_std_library

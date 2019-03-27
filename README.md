@@ -1,6 +1,10 @@
 # PythonListsSummaries
 A set of pages summarizing discussion on major Python mailing lists.
 
+Published here:
+
+https://pythonchb.github.io/PythonListsSummaries/
+
 ## Contributing
 
 These pages are intended to be community supported.  If you have a new page

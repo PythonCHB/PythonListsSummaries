@@ -3,7 +3,8 @@ Python-list
 
 python_list is a listserve for general discussion of the use of the Python Programming language
 
-python-list is a general discussion list for the Python programming language. The list is mirrored to the Usenet newsgroup ``comp.lang.python ``, and is a continuation of a very long running discussion originally on usenet.
+python-list is a general discussion list for the Python programming language.
+The list is mirrored to the Usenet newsgroup ``comp.lang.python``, and is a continuation of a very long running discussion originally on usenet.
 
 It can be found at:
 
@@ -16,3 +17,6 @@ The following are summaries of commonly asked questions of general interest:
    :caption: Contents:
 
    native_buffer_protocol
+   inheritance_terminology
+   why_does___ne___exist
+   where_did_csv_parser_go

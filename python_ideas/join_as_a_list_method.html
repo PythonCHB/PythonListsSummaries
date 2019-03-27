@@ -1,0 +1,245 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Join as a list method &mdash; Python List Summaries 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python-list" href="../python_list/index.html" />
+    <link rel="prev" title="Python-ideas" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python List Summaries
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python-ideas</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Join as a list method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#justification">Justification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python_list/index.html">Python-list</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python List Summaries</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Python-ideas</a> &raquo;</li>
+        
+      <li>Join as a list method</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/python_ideas/join_as_a_list_method.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="join-as-a-list-method">
+<h1>Join as a list method<a class="headerlink" href="#join-as-a-list-method" title="Permalink to this headline">¶</a></h1>
+<p>It is often brought up that the method for joining a sequence of strings should be a method of the list object (or all sequences), rather than a method on strings. That is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Some&quot;</span><span class="p">,</span> <span class="s2">&quot;words&quot;</span> <span class="s2">&quot;to&quot;</span> <span class="s2">&quot;put&quot;</span> <span class="s2">&quot;together&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>rather than:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;Some&quot;</span><span class="p">,</span> <span class="s2">&quot;words&quot;</span> <span class="s2">&quot;to&quot;</span> <span class="s2">&quot;put&quot;</span> <span class="s2">&quot;together&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This was recently brought up in this thread:</p>
+<p><a class="reference external" href="https://mail.python.org/pipermail/python-ideas/2019-March/056064.html">https://mail.python.org/pipermail/python-ideas/2019-March/056064.html</a></p>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>It is very unlikely that <code class="docutils literal notranslate"><span class="pre">.join</span></code> will ever become a list method. It was (and is) a deliberate design decision.</p>
+</div>
+<div class="section" id="justification">
+<h2>Justification<a class="headerlink" href="#justification" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">join</span></code> was originally a function in the <code class="docutils literal notranslate"><span class="pre">string</span></code> module. It Python 2.0, the <code class="docutils literal notranslate"><span class="pre">unicode</span></code> type was added, most of the functions in the string module became methods on both the <code class="docutils literal notranslate"><span class="pre">str</span></code> and <code class="docutils literal notranslate"><span class="pre">unicode</span></code> types, providing a single interface for string processing.
+While in Python3, the string types have been unified, it still makes sense with Python’s design that all string related functionality be found in the <code class="docutils literal notranslate"><span class="pre">str</span></code> object.</p>
+<ol class="arabic simple">
+<li>String joining is inherently a string operation.
+Lists can be used to hold any data type. Having a method on list that only makes sense for a small fraction of the list use-cases makes little sense.
+There are no other list methods that can only be used with certain types.</li>
+<li>A <code class="docutils literal notranslate"><span class="pre">join</span></code> method could call <code class="docutils literal notranslate"><span class="pre">str()</span></code> on all items, but while Python will return <em>something</em> for all data types, not everything would make sense.
+And even for data types that do make sense, users are likely to want to control how the items are “stringified” – with string formatting, etc.</li>
+<li><code class="docutils literal notranslate"><span class="pre">str.join()</span></code> supports not just lists (or other sequences), but any iterable.
+This has become particularly important in Python3, which has shifted focus toward working with iterables, rather than requiring the creation of sequences simply to iterate through them.
+So why not make it an iterable method? because iterables are not a type, but rather anything that conforms to the iteration protocol
+(<a class="reference external" href="https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/">https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/</a>).
+As there is no way to add <code class="docutils literal notranslate"><span class="pre">.join()</span></code> to iterators. Moving <code class="docutils literal notranslate"><span class="pre">.join()</span></code> to the sequence ABC would result in losing important functionality, and require that an iterable be turned into a sequence before joining it – a potentially significant performance hit, and contrary to python 3’s design.
+Having <code class="docutils literal notranslate"><span class="pre">.join()</span></code> as both a list and string method would create confusion for little gain.</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../python_list/index.html" class="btn btn-neutral float-right" title="Python-list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Python-ideas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Christopher Barker and Community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

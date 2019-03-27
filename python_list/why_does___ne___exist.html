@@ -1,0 +1,888 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Why does __ne__ exist? &mdash; Python List Summaries 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Where did csv.parser() go?" href="where_did_csv_parser_go.html" />
+    <link rel="prev" title="Python Inheritance Terminology" href="inheritance_terminology.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python List Summaries
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../python_ideas/index.html">Python-ideas</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python-list</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="native_buffer_protocol.html">Native object exposing buffer protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_terminology.html">Python Inheritance Terminology</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Why does <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> exist?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#responses">responses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="where_did_csv_parser_go.html">Where did csv.parser() go?</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python List Summaries</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Python-list</a> &raquo;</li>
+        
+      <li>Why does <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> exist?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/python_list/why_does___ne___exist.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="why-does-ne-exist">
+<h1>Why does <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> exist?<a class="headerlink" href="#why-does-ne-exist" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://mail.python.org/pipermail/python-list/2018-January/729918.html">https://mail.python.org/pipermail/python-list/2018-January/729918.html</a></p>
+<p>When you create a Python class, you can create dunder methods to
+define how your objects respond to the standard operators. With
+comparison operators, Python will happily switch the operands around
+to find a method to call:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Spam</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is less than </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">True</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Spam</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span>
+<span class="go">&lt;__main__.Spam object at 0x7fb7557b1fd0&gt; is less than 2</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">3</span> <span class="o">&gt;</span> <span class="n">Spam</span><span class="p">()</span>
+<span class="go">&lt;__main__.Spam object at 0x7fb7557b1fd0&gt; is less than 3</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">4</span> <span class="o">&gt;</span> <span class="n">Spam</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">5</span>
+<span class="go">&lt;__main__.Spam object at 0x7fb7557b1fd0&gt; is less than 4</span>
+<span class="go">&lt;__main__.Spam object at 0x7fb7557b1fd0&gt; is less than 5</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>But Python will not automatically assume the converse:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Spam</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">6</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;&gt;=&#39; not supported between instances of &#39;Spam&#39; and &#39;int&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Spam</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">7</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;&gt;&#39; not supported between instances of &#39;Spam&#39; and &#39;int&#39;</span>
+</pre></div>
+</div>
+<p>This is good. This is correct. For inequalities, you can’t assume that
+<code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> is the exact opposite of <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> or the combination of <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">==</span></code> (for
+example, sets don’t behave like numbers, so <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;=</span> <span class="pre">y</span></code> is very different
+from <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">y</span> <span class="pre">or</span> <span class="pre">x</span> <span class="pre">==</span> <span class="pre">y</span></code>). But the one that confuses me is <code class="docutils literal notranslate"><span class="pre">!=</span></code> or <code class="docutils literal notranslate"><span class="pre">__ne__</span></code>.
+If you don’t create it, you get default behaviour:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Ham</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> equals </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">True</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Ham</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="go">&lt;__main__.Ham object at 0x7fb7557c0278&gt; equals 1</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">==</span> <span class="n">Ham</span><span class="p">()</span>
+<span class="go">&lt;__main__.Ham object at 0x7fb7557c0278&gt; equals 2</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Ham</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">3</span>
+<span class="go">&lt;__main__.Ham object at 0x7fb7557c0278&gt; equals 3</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">4</span> <span class="o">!=</span> <span class="n">Ham</span><span class="p">()</span>
+<span class="go">&lt;__main__.Ham object at 0x7fb7557c0278&gt; equals 4</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Ham</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">==</span> <span class="n">x</span>
+<span class="go">&lt;__main__.Ham object at 0x7fb7557b80f0&gt; equals &lt;__main__.Ham object at</span>
+<span class="go">0x7fb7557b80f0&gt;</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">!=</span> <span class="n">x</span>
+<span class="go">&lt;__main__.Ham object at 0x7fb7557b80f0&gt; equals &lt;__main__.Ham object at</span>
+<span class="go">0x7fb7557b80f0&gt;</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Under what circumstances would you want <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">!=</span> <span class="pre">y</span></code> to be different from
+<code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">(x</span> <span class="pre">==</span> <span class="pre">y)</span></code> ? How would this make for sane behaviour? Even when
+other things go weird with equality checks, that basic parallel is
+always maintained:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">==</span> <span class="n">z</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">!=</span> <span class="n">z</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Python gives us a <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">in</span></code> operator that uses <code class="docutils literal notranslate"><span class="pre">__contains__</span></code> and then
+negates the result. There is no way for <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">not</span> <span class="pre">in</span> <span class="pre">y</span></code> to be anything
+different from <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">(x</span> <span class="pre">in</span> <span class="pre">y)</span></code>, as evidenced by the peephole optimizer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="s2">&quot;x not in y&quot;</span><span class="p">)</span>
+<span class="go">  1           0 LOAD_NAME                0 (x)</span>
+<span class="go">              2 LOAD_NAME                1 (y)</span>
+<span class="go">              4 COMPARE_OP               7 (not in)</span>
+<span class="go">              6 RETURN_VALUE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="s2">&quot;not (x in y)&quot;</span><span class="p">)</span>
+<span class="go">  1           0 LOAD_NAME                0 (x)</span>
+<span class="go">              2 LOAD_NAME                1 (y)</span>
+<span class="go">              4 COMPARE_OP               7 (not in)</span>
+<span class="go">              6 RETURN_VALUE</span>
+</pre></div>
+</div>
+<p>So why isn’t <code class="docutils literal notranslate"><span class="pre">!=</span></code> done the same way? Is it historical?</p>
+<div class="section" id="responses">
+<h2>responses<a class="headerlink" href="#responses" title="Permalink to this headline">¶</a></h2>
+<p><strong>1.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; Under what circumstances would you want &quot;x != y&quot; to be different from
+&gt; &quot;not (x == y)&quot; ?
+</pre></div>
+</div>
+<p>In numpy, <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> and <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> do not, in general, return bools.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Python</span> <span class="mf">3.6</span><span class="o">.</span><span class="mi">3</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Oct</span>  <span class="mi">3</span> <span class="mi">2017</span><span class="p">,</span> <span class="mi">21</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">48</span><span class="p">)</span>
+<span class="p">[</span><span class="n">GCC</span> <span class="mf">7.2</span><span class="o">.</span><span class="mi">0</span><span class="p">]</span> <span class="n">on</span> <span class="n">linux</span>
+<span class="n">Type</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span> <span class="s2">&quot;copyright&quot;</span><span class="p">,</span> <span class="s2">&quot;credits&quot;</span> <span class="ow">or</span> <span class="s2">&quot;license&quot;</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="o">.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="n">array</span><span class="p">([</span><span class="bp">False</span><span class="p">,</span>  <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span>  <span class="bp">True</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+<span class="n">array</span><span class="p">([</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span>  <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="ow">not</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">ValueError</span><span class="p">:</span> <span class="n">The</span> <span class="n">truth</span> <span class="n">value</span> <span class="n">of</span> <span class="n">an</span> <span class="n">array</span> <span class="k">with</span> <span class="n">more</span> <span class="n">than</span> <span class="n">one</span> <span class="n">element</span> <span class="ow">is</span>
+<span class="n">ambiguous</span><span class="o">.</span> <span class="n">Use</span> <span class="n">a</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="ow">or</span> <span class="n">a</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">~</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">array</span><span class="p">([</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span>  <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>I couldn’t tell you why this was originally allowed, but it does turn
+out to be strangely useful. (As far as the numpy API is concerned, it
+would be even nicer if ‘not’ could be overridden, IMHO)</p>
+<p><strong>2. author</strong></p>
+<p>Thanks, that’s the kind of example I was looking for. Though numpy
+doesn’t drive the core language development much, so the obvious next
+question is: was this why <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> was implemented, or was there some
+other reason? This example shows how it can be useful, but not why it
+exists.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt; not (a == b)</span>
+<span class="go">&gt; Traceback (most recent call last):</span>
+<span class="go">&gt;   File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">&gt; ValueError: The truth value of an array with more than one element is</span>
+<span class="go">&gt; ambiguous. Use a.any() or a.all()</span>
+</pre></div>
+</div>
+<p>Which means that this construct is still never going to come up in good code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt; ~(a == b)</span>
+<span class="go">&gt; array([ True, False,  True, False], dtype=bool)</span>
+<span class="go">&gt;&gt;&gt;&gt;</span>
+<span class="go">&gt;</span>
+<span class="go">&gt; I couldn&#39;t tell you why this was originally allowed, but it does turn</span>
+<span class="go">&gt; out to be strangely useful. (As far as the numpy API is concerned, it</span>
+<span class="go">&gt; would be even nicer if &#39;not&#39; could be overridden, IMHO)</span>
+</pre></div>
+</div>
+<p>I’m glad <code class="docutils literal notranslate"><span class="pre">not</span></code> can’t be overridden; it’d be too hard to reason about a
+piece of code if even the basic boolean operations could change. If
+you want overridables, you have <code class="docutils literal notranslate"><span class="pre">&amp;|~</span></code> for the bitwise operators (which
+is how numpy does things).</p>
+<p>Has numpy ever asked for a <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">in</span></code> dunder method (<code class="docutils literal notranslate"><span class="pre">__not_contained__</span></code>
+or something)? It’s a strange anomaly that “not (x in y)” can be
+perfectly safely optimized to <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">not</span> <span class="pre">in</span> <span class="pre">y</span></code>, yet basic equality has to
+have separate handling. The default handling does mean that you can
+mostly ignore <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> and expect things to work, but if you subclass
+something that has both, it’ll break:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Foo: </span><span class="si">%s</span><span class="s2"> == </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Foo: </span><span class="si">%s</span><span class="s2"> != </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+<span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">Foo</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Bar: </span><span class="si">%s</span><span class="s2"> == </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Bar</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="n">Bar</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">__main__</span><span class="o">.</span><span class="n">Bar</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f40ebf3a128</span><span class="o">&gt;</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Bar</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span>
+<span class="n">Foo</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">__main__</span><span class="o">.</span><span class="n">Bar</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f40ebf3a128</span><span class="o">&gt;</span> <span class="o">!=</span> <span class="mi">1</span>
+<span class="bp">False</span>
+</pre></div>
+</div>
+<p>Obviously this trivial example looks stupid, but imagine if the
+equality check in the subclass USUALLY gives the same result as the
+superclass, but differs in rare situations. Maybe you create a “bag”
+class that functions a lot like collections.Counter but ignores zeroes
+when comparing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Bag</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="c1"># Disregard any zero entries when comparing to another Bag</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">c</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span><span class="p">}</span> <span class="o">==</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">c</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">c</span>
+<span class="go">in other.items() if c}</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">Bag</span><span class="p">(</span><span class="s2">&quot;aaabccdd&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">Bag</span><span class="p">(</span><span class="s2">&quot;aaabccddq&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span><span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">==</span> <span class="n">b2</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">!=</span> <span class="n">b2</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dict</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dict</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">b2</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The behaviour of <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> is normal and sane. But since there’s no
+<code class="docutils literal notranslate"><span class="pre">__ne__</span></code>, the converse comparison falls back on <code class="docutils literal notranslate"><span class="pre">dict.__ne__</span></code>, not on
+<code class="docutils literal notranslate"><span class="pre">object.__ne__</span></code>.</p>
+<p><strong>3.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt; In numpy, __eq__ and ```__ne__``` do not, in general, return bools.
+&gt;&gt;
+&gt;&gt;&gt;&gt;&gt; a = np.array([1,2,3,4])
+&gt;&gt;&gt;&gt;&gt; b = np.array([0,2,0,4])
+&gt;&gt;&gt;&gt;&gt; a == b
+&gt;&gt; array([False,  True, False,  True], dtype=bool)
+&gt;&gt;&gt;&gt;&gt; a != b
+&gt;&gt; array([ True, False,  True, False], dtype=bool)
+&gt;
+&gt; Thanks, that&#39;s the kind of example I was looking for. Though numpy
+&gt; doesn&#39;t drive the core language development much, so the obvious next
+&gt; question is: was this why ```__ne__``` was implemented, or was there some
+&gt; other reason? This example shows how it can be useful, but not why it
+&gt; exists.
+</pre></div>
+</div>
+<p>Actually, I think it is why it exists.  If I recall correctly, the addition of the six comparative operators* was added
+at the behest of the scientific/numerical community.</p>
+<p><strong>4.</strong></p>
+<p>The six rich comparison methods were added to 2.1 as a result of PEP 207, which confirms that you’re correct, they were added at the request of the numpyites.</p>
+<p><strong>5.</strong></p>
+<p>Interesting sentence from that PEP:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;3. The == and != operators are not assumed to be each other&#39;s</span>
+<span class="n">complement</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">IEEE</span> <span class="mi">754</span> <span class="n">floating</span> <span class="n">point</span> <span class="n">numbers</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">satisfy</span> <span class="n">this</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Does anybody here know how IEE 754 floating point numbers need <code class="docutils literal notranslate"><span class="pre">__ne__</span></code>?</p>
+<p><strong>6.</strong></p>
+<p>That’s very interesting. I’d also like an answer to this. I can’t wrap
+my head around why it would be true. I’ve just spent 15 minutes playing
+with the interpreter (i.e. checking operations on 0, -0, 7,
+<code class="docutils literal notranslate"><span class="pre">float('nan')</span></code>, <code class="docutils literal notranslate"><span class="pre">float('inf')</span></code>, etc.) and then also reading a bit about IEEE
+754 online and I can’t find any combination of examples where <code class="docutils literal notranslate"><span class="pre">==</span></code> and <code class="docutils literal notranslate"><span class="pre">!=</span></code>
+are not each others’ complement.</p>
+<p><strong>7.</strong></p>
+<p>I don’t see a case in IEEE where <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">==</span> <span class="pre">y)</span> <span class="pre">!=</span> <span class="pre">!(x</span> <span class="pre">!=</span> <span class="pre">y)</span></code>.
+There <em>is</em> a case where <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">!=</span> <span class="pre">x)</span></code> is true <code class="docutils literal notranslate"><span class="pre">(when</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">NaN)</span></code>, but for such an
+x, <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">==</span> <span class="pre">x)</span></code> will be false.</p>
+<p>I am hard pressed to think of a case where <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> is actually useful.</p>
+<p>That said, while it is true you only need one of (<code class="docutils literal notranslate"><span class="pre">__eq__</span></code>, <code class="docutils literal notranslate"><span class="pre">__ne__</span></code>), you
+could make the same claim about (<code class="docutils literal notranslate"><span class="pre">__lt__</span></code>, <code class="docutils literal notranslate"><span class="pre">__ge__</span></code>) and (<code class="docutils literal notranslate"><span class="pre">__le__</span></code>, <code class="docutils literal notranslate"><span class="pre">__gt__</span></code>).
+That is, in principle you could get by with only (<code class="docutils literal notranslate"><span class="pre">__eq__</span></code>, <code class="docutils literal notranslate"><span class="pre">__le__</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">__ge__</span></code>) or, if you prefer, (<code class="docutils literal notranslate"><span class="pre">__ne__</span></code>, <code class="docutils literal notranslate"><span class="pre">__lt__</span></code>, <code class="docutils literal notranslate"><span class="pre">__gt__</span></code>), or any other
+combination you prefer.</p>
+<p>Or you could go where C++ is doing and say that <em>if</em> one specifies a single
+<code class="docutils literal notranslate"><span class="pre">__cmp__</span></code> method, it should return one of LT, EQ, GT, and this will
+automatically give rise to all the comparison operators.</p>
+<p>“Trade-offs… trafe-offs as far as the eye can see” ;-)</p>
+<p><strong>8.</strong></p>
+<p>Assuming you’re talking about a case specifically for IEEE 754, I’m
+starting to agree. In general, however, it certainly is useful for some
+numpy objects (as mentioned elsewhere in this thread).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">That</span> <span class="n">said</span><span class="p">,</span> <span class="k">while</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">true</span> <span class="n">you</span> <span class="n">only</span> <span class="n">need</span> <span class="n">one</span> <span class="n">of</span> <span class="p">(</span><span class="fm">__eq__</span><span class="p">,</span> <span class="fm">__ne__</span><span class="p">),</span> <span class="n">you</span>
+<span class="o">&gt;</span> <span class="n">could</span> <span class="n">make</span> <span class="n">the</span> <span class="n">same</span> <span class="n">claim</span> <span class="n">about</span> <span class="p">(</span><span class="fm">__lt__</span><span class="p">,</span> <span class="fm">__ge__</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="fm">__le__</span><span class="p">,</span> <span class="fm">__gt__</span><span class="p">)</span><span class="o">.</span>
+<span class="o">&gt;</span> <span class="n">That</span> <span class="ow">is</span><span class="p">,</span> <span class="ow">in</span> <span class="n">principle</span> <span class="n">you</span> <span class="n">could</span> <span class="n">get</span> <span class="n">by</span> <span class="k">with</span> <span class="n">only</span> <span class="p">(</span><span class="fm">__eq__</span><span class="p">,</span> <span class="fm">__le__</span><span class="p">,</span> <span class="ow">and</span>
+<span class="o">&gt;</span> <span class="fm">__ge__</span><span class="p">)</span> <span class="ow">or</span><span class="p">,</span> <span class="k">if</span> <span class="n">you</span> <span class="n">prefer</span><span class="p">,</span> <span class="p">(</span><span class="fm">__ne__</span><span class="p">,</span> <span class="fm">__lt__</span><span class="p">,</span> <span class="fm">__gt__</span><span class="p">),</span> <span class="ow">or</span> <span class="nb">any</span> <span class="n">other</span>
+<span class="o">&gt;</span> <span class="n">combination</span> <span class="n">you</span> <span class="n">prefer</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This isn’t true for IEEE 754. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Also there are many cases where you don’t have a &lt; b OR a &gt;= b. For
+example, subsets don’t follow this.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="s2">&quot;Trade-offs... trafe-offs as far as the eye can see&quot;</span> <span class="p">;</span><span class="o">-</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Yes few things in life are free. :)</p>
+<p><strong>9.</strong></p>
+<p>Ugh, right, for NaN you can have <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">&lt;</span> <span class="pre">y)</span> <span class="pre">!=</span> <span class="pre">(x</span> <span class="pre">&gt;=</span> <span class="pre">y)</span></code> - both would be false
+if one of x and y is a NaN.</p>
+<p>But <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> is still useless ;-)</p>
+<p><strong>10.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; I don&#39;t see a case in IEEE where (x == y) != !(x != y).
+&gt; There _is_ a case where (x != x) is true (when x is NaN), but for such an
+&gt; x, (x == x) will be false.
+&gt;
+&gt; I am hard pressed to think of a case where ```__ne__``` is actually useful.
+</pre></div>
+</div>
+<p>See my earlier email and/or PEP 207. (tl;dr: non-bool return values)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">That</span> <span class="n">said</span><span class="p">,</span> <span class="k">while</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">true</span> <span class="n">you</span> <span class="n">only</span> <span class="n">need</span> <span class="n">one</span> <span class="n">of</span> <span class="p">(</span><span class="fm">__eq__</span><span class="p">,</span> <span class="fm">__ne__</span><span class="p">),</span> <span class="n">you</span>
+<span class="o">&gt;</span> <span class="n">could</span> <span class="n">make</span> <span class="n">the</span> <span class="n">same</span> <span class="n">claim</span> <span class="n">about</span> <span class="p">(</span><span class="fm">__lt__</span><span class="p">,</span> <span class="fm">__ge__</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="fm">__le__</span><span class="p">,</span> <span class="fm">__gt__</span><span class="p">)</span><span class="o">.</span>
+<span class="o">&gt;</span> <span class="n">That</span> <span class="ow">is</span><span class="p">,</span> <span class="ow">in</span> <span class="n">principle</span> <span class="n">you</span> <span class="n">could</span> <span class="n">get</span> <span class="n">by</span> <span class="k">with</span> <span class="n">only</span> <span class="p">(</span><span class="fm">__eq__</span><span class="p">,</span> <span class="fm">__le__</span><span class="p">,</span> <span class="ow">and</span>
+<span class="o">&gt;</span> <span class="fm">__ge__</span><span class="p">)</span> <span class="ow">or</span><span class="p">,</span> <span class="k">if</span> <span class="n">you</span> <span class="n">prefer</span><span class="p">,</span> <span class="p">(</span><span class="fm">__ne__</span><span class="p">,</span> <span class="fm">__lt__</span><span class="p">,</span> <span class="fm">__gt__</span><span class="p">),</span> <span class="ow">or</span> <span class="nb">any</span> <span class="n">other</span>
+<span class="o">&gt;</span> <span class="n">combination</span> <span class="n">you</span> <span class="n">prefer</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>PEP 207: “The above mechanism is such that classes can get away with not
+implementing either <code class="docutils literal notranslate"><span class="pre">__lt__</span></code> and <code class="docutils literal notranslate"><span class="pre">__le__</span></code> or <code class="docutils literal notranslate"><span class="pre">__gt__</span></code> and <code class="docutils literal notranslate"><span class="pre">__ge__</span></code>.”</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Or</span> <span class="n">you</span> <span class="n">could</span> <span class="n">go</span> <span class="n">where</span> <span class="n">C</span><span class="o">++</span> <span class="ow">is</span> <span class="n">doing</span> <span class="ow">and</span> <span class="n">say</span> <span class="n">that</span> <span class="n">_if_</span> <span class="n">one</span> <span class="n">specifies</span> <span class="n">a</span> <span class="n">single</span>
+<span class="o">&gt;</span> <span class="n">__cmp__</span> <span class="n">method</span><span class="p">,</span> <span class="n">it</span> <span class="n">should</span> <span class="k">return</span> <span class="n">one</span> <span class="n">of</span> <span class="n">LT</span><span class="p">,</span> <span class="n">EQ</span><span class="p">,</span> <span class="n">GT</span><span class="p">,</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">will</span>
+<span class="o">&gt;</span> <span class="n">automatically</span> <span class="n">give</span> <span class="n">rise</span> <span class="n">to</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">comparison</span> <span class="n">operators</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>This used to be the case. (from version 2.1 to version 2.7, AFAICT)</p>
+<p><strong>11.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Actually</span><span class="p">,</span> <span class="n">I</span> <span class="n">think</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">why</span> <span class="n">it</span> <span class="n">exists</span><span class="o">.</span>  <span class="n">If</span> <span class="n">I</span> <span class="n">recall</span> <span class="n">correctly</span><span class="p">,</span> <span class="n">the</span>
+<span class="o">&gt;</span> <span class="n">addition</span> <span class="n">of</span> <span class="n">the</span> <span class="n">six</span> <span class="n">comparative</span> <span class="n">operators</span><span class="o">*</span> <span class="n">was</span> <span class="n">added</span> <span class="n">at</span> <span class="n">the</span> <span class="n">behest</span> <span class="n">of</span>
+<span class="o">&gt;</span> <span class="n">the</span> <span class="n">scientific</span><span class="o">/</span><span class="n">numerical</span> <span class="n">community</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Which personnaly, I think was a mistake. I can understand it is useful
+for the scientific/numerical community to compare vectors with each
+other and get a vector of booleans. However how useful is it doing this
+with the normal boolean operators, instead of calling a function?</p>
+<p>And if doing it with an operator was so important, I think it would have
+been better to introduce boxed operators, like <code class="docutils literal notranslate"><span class="pre">[+]</span></code>, <code class="docutils literal notranslate"><span class="pre">[&lt;]</span></code> … where the
+default behaviour would be an elementary wise application of the
+non-boxed operator.</p>
+<p><strong>12.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt; In numpy, __eq__ and ```__ne__``` do not, in general, return bools.
+&gt;&gt;
+&gt;&gt;&gt;&gt;&gt; a = np.array([1,2,3,4])
+&gt;&gt;&gt;&gt;&gt; b = np.array([0,2,0,4])
+&gt;&gt;&gt;&gt;&gt; a == b
+&gt;&gt; array([False,  True, False,  True], dtype=bool)
+&gt;&gt;&gt;&gt;&gt; a != b
+&gt;&gt; array([ True, False,  True, False], dtype=bool)
+&gt;
+&gt; Thanks, that&#39;s the kind of example I was looking for. Though numpy
+&gt; doesn&#39;t drive the core language development much, so the obvious next
+&gt; question is: was this why ```__ne__``` was implemented, or was there some
+&gt; other reason? This example shows how it can be useful, but not why it
+&gt; exists.
+</pre></div>
+</div>
+<p>AFAIK this was the main reason. This can be also used for creating queries.</p>
+<p>NumPy inspired 4 or 5 core features which are rarely used outside of
+NumPy. They include the possibility of comparison operators to return
+non-booleans</p>
+<p><strong>13.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; Under what circumstances would you want &quot;x != y&quot; to be different from
+&gt; &quot;not (x == y)&quot; ? How would this make for sane behaviour?
+</pre></div>
+</div>
+<p>Presumably so that any behaviour any be programmed when overriding these
+operators.</p>
+<p>Maybe someone wants to do weird stuff with <code class="docutils literal notranslate"><span class="pre">==</span></code> that doesn’t yield a true
+or false result, so that you can’t just reverse it for <code class="docutils literal notranslate"><span class="pre">!=</span></code>.</p>
+<p>For example (perhaps this is similar to what was suggested in another post):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>   <span class="n">yields</span>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>   <span class="n">yields</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Although here, you would probably define ‘not’ so that <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">(1,1,0)</span></code>
+does actually yield <code class="docutils literal notranslate"><span class="pre">(0,0,1)</span></code>.</p>
+<p>So clearly I need a weirder example.</p>
+<blockquote>
+<div>Even when</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">other</span> <span class="n">things</span> <span class="n">go</span> <span class="n">weird</span> <span class="k">with</span> <span class="n">equality</span> <span class="n">checks</span><span class="p">,</span> <span class="n">that</span> <span class="n">basic</span> <span class="n">parallel</span> <span class="ow">is</span>
+<span class="o">&gt;</span> <span class="n">always</span> <span class="n">maintained</span><span class="p">:</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">==</span> <span class="n">z</span>
+<span class="o">&gt;</span> <span class="kc">False</span>
+<span class="o">&gt;&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">!=</span> <span class="n">z</span>
+<span class="o">&gt;</span> <span class="kc">True</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">Python</span> <span class="n">gives</span> <span class="n">us</span> <span class="n">a</span> <span class="s2">&quot;not in&quot;</span> <span class="n">operator</span> <span class="n">that</span> <span class="n">uses</span> <span class="fm">__contains__</span> <span class="ow">and</span> <span class="n">then</span>
+<span class="o">&gt;</span> <span class="n">negates</span> <span class="n">the</span> <span class="n">result</span><span class="o">.</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">way</span> <span class="k">for</span> <span class="s2">&quot;x not in y&quot;</span> <span class="n">to</span> <span class="n">be</span> <span class="n">anything</span>
+<span class="o">&gt;</span> <span class="n">different</span> <span class="kn">from</span> <span class="s2">&quot;not (x in y)&quot;</span><span class="p">,</span> <span class="k">as</span> <span class="n">evidenced</span> <span class="n">by</span> <span class="n">the</span> <span class="n">peephole</span> <span class="n">optimizer</span><span class="p">:</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;&gt;</span> <span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="s2">&quot;x not in y&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span>    <span class="mi">1</span>           <span class="mi">0</span> <span class="n">LOAD_NAME</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">&gt;</span>                <span class="mi">2</span> <span class="n">LOAD_NAME</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="o">&gt;</span>                <span class="mi">4</span> <span class="n">COMPARE_OP</span>               <span class="mi">7</span> <span class="p">(</span><span class="ow">not</span> <span class="ow">in</span><span class="p">)</span>
+<span class="o">&gt;</span>                <span class="mi">6</span> <span class="n">RETURN_VALUE</span>
+<span class="o">&gt;&gt;&gt;&gt;</span> <span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="s2">&quot;not (x in y)&quot;</span><span class="p">)</span>
+<span class="o">&gt;</span>    <span class="mi">1</span>           <span class="mi">0</span> <span class="n">LOAD_NAME</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">&gt;</span>                <span class="mi">2</span> <span class="n">LOAD_NAME</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="o">&gt;</span>                <span class="mi">4</span> <span class="n">COMPARE_OP</span>               <span class="mi">7</span> <span class="p">(</span><span class="ow">not</span> <span class="ow">in</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>I get ‘4 COMPARE OP    6 (in)’ here. So they are distinct ops. ‘not in’
+doesn’t just call ‘in’, then apply ‘not’. Not here anyway.</p>
+<p><strong>14. author</strong></p>
+<p>With tuples, I absolutely agree with Python’s current behaviour: the
+tuples you give are simply not equal. A tuple doesn’t represent a
+vector; it represents a specific collection of values, like the
+coordinates of a point in 2D or 3D space. If you look at the two
+points (1,5) and (3,5), they aren’t “half equal”. They’re different
+points, at different locations. They happen to have the same
+elevation, but that’s just a point of curiosity.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span>  <span class="n">Even</span> <span class="n">when</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span> <span class="n">other</span> <span class="n">things</span> <span class="n">go</span> <span class="n">weird</span> <span class="k">with</span> <span class="n">equality</span> <span class="n">checks</span><span class="p">,</span> <span class="n">that</span> <span class="n">basic</span> <span class="n">parallel</span> <span class="ow">is</span>
+<span class="o">&gt;&gt;</span> <span class="n">always</span> <span class="n">maintained</span><span class="p">:</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">==</span> <span class="n">z</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span> <span class="kc">False</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">!=</span> <span class="n">z</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span> <span class="kc">True</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span> <span class="n">Python</span> <span class="n">gives</span> <span class="n">us</span> <span class="n">a</span> <span class="s2">&quot;not in&quot;</span> <span class="n">operator</span> <span class="n">that</span> <span class="n">uses</span> <span class="fm">__contains__</span> <span class="ow">and</span> <span class="n">then</span>
+<span class="o">&gt;&gt;</span> <span class="n">negates</span> <span class="n">the</span> <span class="n">result</span><span class="o">.</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">way</span> <span class="k">for</span> <span class="s2">&quot;x not in y&quot;</span> <span class="n">to</span> <span class="n">be</span> <span class="n">anything</span>
+<span class="o">&gt;&gt;</span> <span class="n">different</span> <span class="kn">from</span> <span class="s2">&quot;not (x in y)&quot;</span><span class="p">,</span> <span class="k">as</span> <span class="n">evidenced</span> <span class="n">by</span> <span class="n">the</span> <span class="n">peephole</span> <span class="n">optimizer</span><span class="p">:</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span> <span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="s2">&quot;x not in y&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span>    <span class="mi">1</span>           <span class="mi">0</span> <span class="n">LOAD_NAME</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>                <span class="mi">2</span> <span class="n">LOAD_NAME</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>                <span class="mi">4</span> <span class="n">COMPARE_OP</span>               <span class="mi">7</span> <span class="p">(</span><span class="ow">not</span> <span class="ow">in</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>                <span class="mi">6</span> <span class="n">RETURN_VALUE</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;&gt;&gt;</span> <span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="s2">&quot;not (x in y)&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span>    <span class="mi">1</span>           <span class="mi">0</span> <span class="n">LOAD_NAME</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>                <span class="mi">2</span> <span class="n">LOAD_NAME</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>                <span class="mi">4</span> <span class="n">COMPARE_OP</span>               <span class="mi">7</span> <span class="p">(</span><span class="ow">not</span> <span class="ow">in</span><span class="p">)</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">I</span> <span class="n">get</span> <span class="s1">&#39;4 COMPARE OP    6 (in)&#39;</span> <span class="n">here</span><span class="o">.</span> <span class="n">So</span> <span class="n">they</span> <span class="n">are</span> <span class="n">distinct</span> <span class="n">ops</span><span class="o">.</span> <span class="s1">&#39;not in&#39;</span>
+<span class="o">&gt;</span> <span class="n">doesn</span><span class="s1">&#39;t just call &#39;</span><span class="ow">in</span><span class="s1">&#39;, then apply &#39;</span><span class="ow">not</span><span class="s1">&#39;. Not here anyway.</span>
+<span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The fact that your Python doesn’t optimize it is actually beside the
+point; if <em>any</em> Python interpreter can optimize this down, it must be
+semantically identical. I did this on CPython 3.7, fwiw, but it
+doesn’t really matter.</p>
+<p><strong>15.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">Maybe</span> <span class="n">someone</span> <span class="n">wants</span> <span class="n">to</span> <span class="n">do</span> <span class="n">weird</span> <span class="n">stuff</span> <span class="k">with</span> <span class="o">==</span> <span class="n">that</span> <span class="n">doesn</span><span class="s1">&#39;t yield a true or</span>
+<span class="o">&gt;&gt;</span> <span class="n">false</span> <span class="n">result</span><span class="p">,</span> <span class="n">so</span> <span class="n">that</span> <span class="n">you</span> <span class="n">can</span><span class="s1">&#39;t just reverse it for !=.</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span> <span class="n">For</span> <span class="n">example</span> <span class="p">(</span><span class="n">perhaps</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">similar</span> <span class="n">to</span> <span class="n">what</span> <span class="n">was</span> <span class="n">suggested</span> <span class="ow">in</span> <span class="n">another</span> <span class="n">post</span><span class="p">):</span>
+<span class="o">&gt;&gt;</span>
+<span class="o">&gt;&gt;</span>   <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>   <span class="n">yields</span>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>   <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>   <span class="n">yields</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="o">&gt;</span> <span class="n">With</span> <span class="n">tuples</span><span class="p">,</span> <span class="n">I</span> <span class="n">absolutely</span> <span class="n">agree</span> <span class="k">with</span> <span class="n">Python</span><span class="s1">&#39;s current behaviour: the</span>
+<span class="o">&gt;</span> <span class="n">tuples</span> <span class="n">you</span> <span class="n">give</span> <span class="n">are</span> <span class="n">simply</span> <span class="ow">not</span> <span class="n">equal</span><span class="o">.</span> <span class="n">A</span> <span class="nb">tuple</span> <span class="n">doesn</span><span class="s1">&#39;t represent a</span>
+<span class="o">&gt;</span> <span class="n">vector</span><span class="p">;</span> <span class="n">it</span> <span class="n">represents</span> <span class="n">a</span> <span class="n">specific</span> <span class="n">collection</span> <span class="n">of</span> <span class="n">values</span><span class="p">,</span> <span class="n">like</span> <span class="n">the</span>
+<span class="o">&gt;</span> <span class="n">coordinates</span> <span class="n">of</span> <span class="n">a</span> <span class="n">point</span> <span class="ow">in</span> <span class="mi">2</span><span class="n">D</span> <span class="ow">or</span> <span class="mi">3</span><span class="n">D</span> <span class="n">space</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">look</span> <span class="n">at</span> <span class="n">the</span> <span class="n">two</span>
+<span class="o">&gt;</span> <span class="n">points</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">they</span> <span class="n">aren</span><span class="s1">&#39;t &quot;half equal&quot;. They&#39;</span><span class="n">re</span> <span class="n">different</span>
+<span class="o">&gt;</span> <span class="n">points</span><span class="p">,</span> <span class="n">at</span> <span class="n">different</span> <span class="n">locations</span><span class="o">.</span> <span class="n">They</span> <span class="n">happen</span> <span class="n">to</span> <span class="n">have</span> <span class="n">the</span> <span class="n">same</span>
+<span class="o">&gt;</span> <span class="n">elevation</span><span class="p">,</span> <span class="n">but</span> <span class="n">that</span><span class="s1">&#39;s just a point of curiosity.</span>
+</pre></div>
+</div>
+<p>My <code class="docutils literal notranslate"><span class="pre">(10,20,30)</span></code> were meant to represent some user-defined type, not an
+ordinary tuple. And someone might intend that <code class="docutils literal notranslate"><span class="pre">==</span></code> operates on two
+instances of that type as thought they were vectors. Or any other kind
+of behaviour as I said.</p>
+<p>But not necessarily some logical inverse of <code class="docutils literal notranslate"><span class="pre">!=</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt;&gt;&gt; dis.dis(&quot;not (x in y)&quot;)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="mi">1</span>           <span class="mi">0</span> <span class="n">LOAD_NAME</span>                <span class="mi">0</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="mi">2</span> <span class="n">LOAD_NAME</span>                <span class="mi">1</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="mi">4</span> <span class="n">COMPARE_OP</span>               <span class="mi">7</span> <span class="p">(</span><span class="ow">not</span> <span class="ow">in</span><span class="p">)</span>
+<span class="go">&gt;&gt;</span>
+<span class="go">&gt;&gt;</span>
+<span class="go">&gt;&gt; I get &#39;4 COMPARE OP    6 (in)&#39; here. So they are distinct ops. &#39;not in&#39;</span>
+<span class="go">&gt;&gt; doesn&#39;t just call &#39;in&#39;, then apply &#39;not&#39;. Not here anyway.</span>
+<span class="go">&gt;&gt;</span>
+<span class="go">&gt;</span>
+<span class="go">&gt; The fact that your Python doesn&#39;t optimize it is actually beside the</span>
+<span class="go">&gt; point; if _any_ Python interpreter can optimize this down, it must be</span>
+<span class="go">&gt; semantically identical.</span>
+</pre></div>
+</div>
+<p>Actually I didn’t see the ‘not’ on the outside of the brackets. I
+thought the two expressions were ‘not in’ and ‘in’ and that you might
+have transcribed the ‘7 (not in)’ part wrongly.</p>
+<p>But this reduction isn’t necessarily an optimisation. It might just be a
+syntactical transformation from ‘not (a in b)’ to ‘(a not in b)’</p>
+<p>The disassembly for ‘in’ and ‘not in’ suggests that these are two
+independent operators, which could indeed have behaviours that are not
+complements of each other.</p>
+<p>On the other hand, when you /did/ want to evaluate ‘in’ followed by
+‘not’, then you want:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ow">not</span> <span class="p">(</span><span class="n">a</span> <span class="ow">in</span> <span class="n">b</span><span class="p">)</span>            <span class="c1"># compare using &#39;not in&#39;</span>
+</pre></div>
+</div>
+<p>to do the same thing as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">temp</span> <span class="o">=</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">b</span>           <span class="c1"># compare using &#39;in&#39;</span>
+<span class="ow">not</span> <span class="n">temp</span>                <span class="c1"># apply unary not</span>
+</pre></div>
+</div>
+<p>Then there might not be the freedom to have in/not in have independent
+behaviours.</p>
+<p><strong>16. author</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dis.dis(&quot;not (x in y)&quot;)</span>
+<span class="go">&gt;&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;&gt;     1           0 LOAD_NAME                0 (x)</span>
+<span class="go">&gt;&gt;&gt;&gt;                 2 LOAD_NAME                1 (y)</span>
+<span class="go">&gt;&gt;&gt;&gt;                 4 COMPARE_OP               7 (not in)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="n">get</span> <span class="s1">&#39;4 COMPARE OP    6 (in)&#39;</span> <span class="n">here</span><span class="o">.</span> <span class="n">So</span> <span class="n">they</span> <span class="n">are</span> <span class="n">distinct</span> <span class="n">ops</span><span class="o">.</span> <span class="s1">&#39;not in&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doesn</span><span class="s1">&#39;t just call &#39;</span><span class="ow">in</span><span class="s1">&#39;, then apply &#39;</span><span class="ow">not</span><span class="s1">&#39;. Not here anyway.</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;</span>
+<span class="go">&gt;&gt; The fact that your Python doesn&#39;t optimize it is actually beside the</span>
+<span class="go">&gt;&gt; point; if _any_ Python interpreter can optimize this down, it must be</span>
+<span class="go">&gt;&gt; semantically identical.</span>
+<span class="go">&gt;</span>
+<span class="go">&gt;</span>
+<span class="go">&gt; Actually I didn&#39;t see the &#39;not&#39; on the outside of the brackets. I thought</span>
+<span class="go">&gt; the two expressions were &#39;not in&#39; and &#39;in&#39; and that you might have</span>
+<span class="go">&gt; transcribed the &#39;7 (not in)&#39; part wrongly.</span>
+</pre></div>
+</div>
+<p>That’s why I don’t transcribe - I copy and paste. It’s way WAY safer that way.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">But</span> <span class="n">this</span> <span class="n">reduction</span> <span class="n">isn</span><span class="s1">&#39;t necessarily an optimisation. It might just be a</span>
+<span class="o">&gt;</span> <span class="n">syntactical</span> <span class="n">transformation</span> <span class="kn">from</span> <span class="s1">&#39;not (a in b)&#39;</span> <span class="n">to</span> <span class="s1">&#39;(a not in b)&#39;</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">The</span> <span class="n">disassembly</span> <span class="k">for</span> <span class="s1">&#39;in&#39;</span> <span class="ow">and</span> <span class="s1">&#39;not in&#39;</span> <span class="n">suggests</span> <span class="n">that</span> <span class="n">these</span> <span class="n">are</span> <span class="n">two</span>
+<span class="o">&gt;</span> <span class="n">independent</span> <span class="n">operators</span><span class="p">,</span> <span class="n">which</span> <span class="n">could</span> <span class="n">indeed</span> <span class="n">have</span> <span class="n">behaviours</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span>
+<span class="o">&gt;</span> <span class="n">complements</span> <span class="n">of</span> <span class="n">each</span> <span class="n">other</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Uhm, if the peephole optimizer does a syntactical transformation, it
+MUST retain the semantics. The disassembly for “in” and “not in” shows
+that they are independent, but the disassembly for “not (x in y)”
+proves that they are semantically linked.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">On</span> <span class="n">the</span> <span class="n">other</span> <span class="n">hand</span><span class="p">,</span> <span class="n">when</span> <span class="n">you</span> <span class="o">/</span><span class="n">did</span><span class="o">/</span> <span class="n">want</span> <span class="n">to</span> <span class="n">evaluate</span> <span class="s1">&#39;in&#39;</span> <span class="n">followed</span> <span class="n">by</span> <span class="s1">&#39;not&#39;</span><span class="p">,</span>
+<span class="o">&gt;</span> <span class="n">then</span> <span class="n">you</span> <span class="n">want</span><span class="p">:</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span>    <span class="ow">not</span> <span class="p">(</span><span class="n">a</span> <span class="ow">in</span> <span class="n">b</span><span class="p">)</span>            <span class="c1"># compare using &#39;not in&#39;</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">to</span> <span class="n">do</span> <span class="n">the</span> <span class="n">same</span> <span class="n">thing</span> <span class="k">as</span><span class="p">:</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span>    <span class="n">temp</span> <span class="o">=</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">b</span>           <span class="c1"># compare using &#39;in&#39;</span>
+<span class="o">&gt;</span>    <span class="ow">not</span> <span class="n">temp</span>                <span class="c1"># apply unary not</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">Then</span> <span class="n">there</span> <span class="n">might</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">the</span> <span class="n">freedom</span> <span class="n">to</span> <span class="n">have</span> <span class="ow">in</span><span class="o">/</span><span class="ow">not</span> <span class="ow">in</span> <span class="n">have</span> <span class="n">independent</span>
+<span class="o">&gt;</span> <span class="n">behaviours</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>And the whole point of my post is that there is no such freedom - that
+“not in” MUST always give the exact converse of “in”. (And if
+<code class="docutils literal notranslate"><span class="pre">__contains__</span></code> returns something other than a boolean, it is coerced
+before the operator returns it.) Yet equality is not like that. Hence
+my post.</p>
+<p><strong>17.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">So</span> <span class="n">why</span> <span class="n">isn</span><span class="s1">&#39;t != done the same way? Is it historical?</span>
+</pre></div>
+</div>
+<p>I’d say this is certainly historical, remembering that in Python 2 you used to be able to compare all sorts of things, whereas in Python 3 you’ll get:-</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span> <span class="o">&lt;</span> <span class="s2">&quot;a&quot;</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;&lt;&#39; not supported between instances of &#39;int&#39; and &#39;str&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>This seems to be confirmed by the following.  From the third paragraph at <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__ne__">https://docs.python.org/2/reference/datamodel.html#object.__ne__</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;There are no implied relationships among the comparison operators. The truth of x==y does not imply that x!=y is false. Accordingly, when defining __eq__(), one should also define __ne__() so that the operators will behave as expected...&quot;</span><span class="o">.</span>  <span class="n">Compare</span> <span class="n">that</span> <span class="k">with</span> <span class="n">the</span> <span class="n">Python</span> <span class="mi">3</span> <span class="n">equivalent</span> <span class="s2">&quot;By default, __ne__() delegates to __eq__() and inverts the result unless it is NotImplemented. There are no other implied relationships among the comparison operators, for example, the truth of ```(x&lt;y or x==y)``` does not imply ```x&lt;=y```...&quot;</span>
+</pre></div>
+</div>
+<p><strong>18. author</strong></p>
+<p>Ah, I forgot to check the Py2 docs. So, yeah, sounds like it’s
+basically historical. I’m still not sure why it was done in the first
+place, but it looks like it’s the sort of thing that wouldn’t be done
+now.</p>
+<p><strong>19.</strong></p>
+<p>I’m not understanding why you speculate that it wouldn’t be done today.</p>
+<p>We’ve established that it is useful to allow data types to define their
+own meaning of “equal” and “not equal”, like many other operations. Is
+that not good enough reason to allow it still?</p>
+<p><strong>20. author</strong></p>
+<p>The fact that container types can define “contains” but can’t define
+“doesn’t contain”, and that (as of Py3) there’s proper default
+handling, suggests that it’s not as big a priority now.</p>
+<p>Let’s put it this way. Suppose that <strong>eq</strong> existed and <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> didn’t,
+just like with <strong>contains</strong>. Go ahead: sell the notion of <strong>ne</strong>.
+Pitch it, show why we absolutely need to allow this. Make sure you
+mention the potential confusion when subclassing. Be sure to show why
+it’s okay for “not in” to force to boolean but “==” should allow any
+return value.</p>
+<p><strong>21.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">The</span> <span class="n">fact</span> <span class="n">that</span> <span class="n">container</span> <span class="n">types</span> <span class="n">can</span> <span class="n">define</span> <span class="s2">&quot;contains&quot;</span> <span class="n">but</span> <span class="n">can</span><span class="s1">&#39;t define</span>
+<span class="o">&gt;</span> <span class="s2">&quot;doesn&#39;t contain&quot;</span><span class="p">,</span> <span class="ow">and</span> <span class="n">that</span> <span class="p">(</span><span class="k">as</span> <span class="n">of</span> <span class="n">Py3</span><span class="p">)</span> <span class="n">there</span><span class="s1">&#39;s proper default</span>
+<span class="o">&gt;</span> <span class="n">handling</span><span class="p">,</span> <span class="n">suggests</span> <span class="n">that</span> <span class="n">it</span><span class="s1">&#39;s not as big a priority now.</span>
+</pre></div>
+</div>
+<p>That is an inconsistency, I agree.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Let</span><span class="s1">&#39;s put it this way. Suppose that __eq__ existed and ```__ne__``` didn&#39;</span><span class="n">t</span><span class="p">,</span>
+<span class="o">&gt;</span> <span class="n">just</span> <span class="n">like</span> <span class="k">with</span> <span class="fm">__contains__</span><span class="o">.</span> <span class="n">Go</span> <span class="n">ahead</span><span class="p">:</span> <span class="n">sell</span> <span class="n">the</span> <span class="n">notion</span> <span class="n">of</span> <span class="fm">__ne__</span><span class="o">.</span>
+<span class="o">&gt;</span> <span class="n">Pitch</span> <span class="n">it</span><span class="p">,</span> <span class="n">show</span> <span class="n">why</span> <span class="n">we</span> <span class="n">absolutely</span> <span class="n">need</span> <span class="n">to</span> <span class="n">allow</span> <span class="n">this</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>I think “reject unless absolutely needed” is an unreasonably high bar,
+which would disqualify most Python language features. So I don’t know
+why you expect this to be so especially strongly argued.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Make</span> <span class="n">sure</span> <span class="n">you</span> <span class="n">mention</span> <span class="n">the</span> <span class="n">potential</span> <span class="n">confusion</span> <span class="n">when</span> <span class="n">subclassing</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>For example, that would also be a problem for multiple inheritance. Not
+“absolutely needed”, and high risk of confusion when subclassing. Do you
+think that multiple inheritance would thereby also not be allowed today?</p>
+<p>If you consider that a different case, why?</p>
+<p><strong>22. author</strong></p>
+<p>There’s a LOT that you can do usefully with MI that you can’t do
+without it. Having spent a few years (many years ago) working with
+Java, I appreciate the ability to inherit from more than one class.
+Does it have to be done the way Python currently does it? No. But one
+way or another, it’s a massively useful feature.</p>
+<p>(You’re right that “absolutely needed” is too high a bar, but
+hyperbole aside, I do think that MI hits a higher mark than <strong>ne</strong>
+does.)</p>
+<p><strong>23.</strong></p>
+<p>I’m not the one making pronouncements on what would or would not be
+allowed, in a counterfactual universe where things had been different
+for so many years. So, because I don’t need to speculate about that, I
+won’t :-)</p>
+<p><strong>24.</strong></p>
+<p>Considering we just recently added a matrix-multiplication operator, yes.</p>
+<p><strong>25. author</strong></p>
+<p>That has approximately zero consequences on class authors. If you were
+unaware of <code class="docutils literal notranslate"><span class="pre">__matmul__</span></code>, it wouldn’t have the chance to randomly break
+your <code class="docutils literal notranslate"><span class="pre">__mul__</span></code> semantics. And even with that excellent backward
+compatibility, it STILL took many years to get accepted.</p>
+<p><strong>26.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Let</span><span class="s1">&#39;s put it this way. Suppose that __eq__ existed and __ne__ didn&#39;</span><span class="n">t</span><span class="p">,</span>
+<span class="o">&gt;</span> <span class="n">just</span> <span class="n">like</span> <span class="k">with</span> <span class="fm">__contains__</span><span class="o">.</span> <span class="n">Go</span> <span class="n">ahead</span><span class="p">:</span> <span class="n">sell</span> <span class="n">the</span> <span class="n">notion</span> <span class="n">of</span> <span class="fm">__ne__</span><span class="o">.</span>
+<span class="o">&gt;</span> <span class="n">Pitch</span> <span class="n">it</span><span class="p">,</span> <span class="n">show</span> <span class="n">why</span> <span class="n">we</span> <span class="n">absolutely</span> <span class="n">need</span> <span class="n">to</span> <span class="n">allow</span> <span class="n">this</span><span class="o">.</span> <span class="n">Make</span> <span class="n">sure</span> <span class="n">you</span>
+<span class="o">&gt;</span> <span class="n">mention</span> <span class="n">the</span> <span class="n">potential</span> <span class="n">confusion</span> <span class="n">when</span> <span class="n">subclassing</span><span class="o">.</span> <span class="n">Be</span> <span class="n">sure</span> <span class="n">to</span> <span class="n">show</span> <span class="n">why</span>
+<span class="o">&gt;</span> <span class="n">it</span><span class="s1">&#39;s okay for &quot;not in&quot; to force to boolean but &quot;==&quot; should allow any</span>
+<span class="o">&gt;</span> <span class="k">return</span> <span class="n">value</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">__ne__</span></code> and <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> are important for building mask arrays in NumPy,
+which allow complex indexing operations.  A lot of NumPy’s design was
+inspired by MATLAB, so being able to index the same way as in MATLAB
+is a pretty killer feature.</p>
+<p>Indexing an array using mask arrays like this is idiomatic:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">some_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">valid</span> <span class="o">=</span> <span class="n">some_arr</span><span class="p">[</span><span class="n">some_arr</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Anybody with familiarity with NumPy appreciates that this is possible.</p>
+<p>I imagine that ORMs like Django or SqlAlchemy also override <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> to
+provide nice APIs.</p>
+<p>Finally (and perhaps least imporant), there is a performance hit if
+only allowing <code class="docutils literal notranslate"><span class="pre">__eq__</span></code> and then taking its inverse.</p>
+<p><strong>27.</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">some_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="o">&gt;</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">some_arr</span><span class="p">[</span><span class="n">some_arr</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>I guess it was rather useful because list comprehension wasn’t included
+in the language at that moment, but I don’t find it that much more useful
+than:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">valid</span> <span class="o">=</span> <span class="n">somearr</span><span class="p">[[</span><span class="n">number</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">somearr</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p><strong>28. author</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">Anybody</span> <span class="k">with</span> <span class="n">familiarity</span> <span class="k">with</span> <span class="n">NumPy</span> <span class="n">appreciates</span> <span class="n">that</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">possible</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>I’ve used it, and I’m familiar with it, and I’m still not sure that I
+appreciate it. But if it’s there because of MATLAB, well, I guess
+that’s what people want?</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="where_did_csv_parser_go.html" class="btn btn-neutral float-right" title="Where did csv.parser() go?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="inheritance_terminology.html" class="btn btn-neutral float-left" title="Python Inheritance Terminology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Christopher Barker and Community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

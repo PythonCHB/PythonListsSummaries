@@ -5,11 +5,6 @@ Published here:
 
 https://pythonchb.github.io/PythonListsSummaries/
 
-## Sphinx Info
-
-- make sure to install requirements.txt
-- run ```make html```. The output directory is already ignored.
-
 ## Contributing
 
 These pages are intended to be community supported.  If you have a new page

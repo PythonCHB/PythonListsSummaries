@@ -57,3 +57,5 @@ For working with git, gitHub, and Pull Requests, see other sources -- google is 
 When adding a new page, you need to create a file in the appropriate directory, called: `something_meaningfull.rst` -- see the existing pages for how that should be structured.
 Then you can add a line to the `index.rst` page in that dir so that it will be listed in teh table of contents.
 
+You may want to add your name as the author at the bottom of the page, and/or add your name to the list if you make a major contribution to an existing page.
+

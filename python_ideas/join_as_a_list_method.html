@@ -190,6 +190,8 @@ So why not make it an iterable method? because iterables are not a type, but rat
 As there is no way to add <code class="docutils literal notranslate"><span class="pre">.join()</span></code> to iterators. Moving <code class="docutils literal notranslate"><span class="pre">.join()</span></code> to the sequence ABC would result in losing important functionality, and require that an iterable be turned into a sequence before joining it – a potentially significant performance hit, and contrary to python 3’s design.
 Having <code class="docutils literal notranslate"><span class="pre">.join()</span></code> as both a list and string method would create confusion for little gain.</li>
 </ol>
+<p class="rubric">Authorship</p>
+<p>Christopher H. Barker: <code class="docutils literal notranslate"><span class="pre">PythonCHB&#64;gmail.com</span></code></p>
 </div>
 </div>
 

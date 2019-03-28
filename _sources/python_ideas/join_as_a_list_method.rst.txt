@@ -43,7 +43,9 @@ While in Python3, the string types have been unified, it still makes sense with 
    As there is no way to add ``.join()`` to iterators. Moving ``.join()`` to the sequence ABC would result in losing important functionality, and require that an iterable be turned into a sequence before joining it -- a potentially significant performance hit, and contrary to python 3's design.
    Having ``.join()`` as both a list and string method would create confusion for little gain.
 
+.. rubric:: Authorship
 
+Christopher H. Barker: ``PythonCHB@gmail.com``
 
 
 

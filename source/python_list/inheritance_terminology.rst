@@ -26,7 +26,7 @@ reference `http://docs.python.org/3/reference/ <http://docs.python.org/3/referen
 the glossary `http://docs.python.org/3/glossary.html <http://docs.python.org/3/glossary.html>`_\ , but with the
 caveat that many flaws have been found in recent years.
 
-.. code-block::
+::
 
    > However, in books about Python and other languages, I have also seen the terms:
    >
@@ -39,7 +39,7 @@ multiple-inheritance system, such as provided by Python, the superclass
 is *not* necessarily the base class. See this article from 2011
 `https://rhettinger.wordpress.com/2011/05/26/super-considered-super/ <https://rhettinger.wordpress.com/2011/05/26/super-considered-super/>`_.
 
-.. code-block::
+::
 
    > So, are base class & subclass the proper terms?
 

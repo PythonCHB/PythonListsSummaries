@@ -178,17 +178,17 @@
 <p><code class="docutils literal notranslate"><span class="pre">join</span></code> was originally a function in the <code class="docutils literal notranslate"><span class="pre">string</span></code> module. It Python 2.0, the <code class="docutils literal notranslate"><span class="pre">unicode</span></code> type was added, most of the functions in the string module became methods on both the <code class="docutils literal notranslate"><span class="pre">str</span></code> and <code class="docutils literal notranslate"><span class="pre">unicode</span></code> types, providing a single interface for string processing.
 While in Python3, the string types have been unified, it still makes sense with Python’s design that all string related functionality be found in the <code class="docutils literal notranslate"><span class="pre">str</span></code> object.</p>
 <ol class="arabic simple">
-<li>String joining is inherently a string operation.
+<li><p>String joining is inherently a string operation.
 Lists can be used to hold any data type. Having a method on list that only makes sense for a small fraction of the list use-cases makes little sense.
-There are no other list methods that can only be used with certain types.</li>
-<li>A <code class="docutils literal notranslate"><span class="pre">join</span></code> method could call <code class="docutils literal notranslate"><span class="pre">str()</span></code> on all items, but while Python will return <em>something</em> for all data types, not everything would make sense.
-And even for data types that do make sense, users are likely to want to control how the items are “stringified” – with string formatting, etc.</li>
-<li><code class="docutils literal notranslate"><span class="pre">str.join()</span></code> supports not just lists (or other sequences), but any iterable.
+There are no other list methods that can only be used with certain types.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">join</span></code> method could call <code class="docutils literal notranslate"><span class="pre">str()</span></code> on all items, but while Python will return <em>something</em> for all data types, not everything would make sense.
+And even for data types that do make sense, users are likely to want to control how the items are “stringified” – with string formatting, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str.join()</span></code> supports not just lists (or other sequences), but any iterable.
 This has become particularly important in Python3, which has shifted focus toward working with iterables, rather than requiring the creation of sequences simply to iterate through them.
 So why not make it an iterable method? because iterables are not a type, but rather anything that conforms to the iteration protocol
 (<a class="reference external" href="https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/">https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/</a>).
 As there is no way to add <code class="docutils literal notranslate"><span class="pre">.join()</span></code> to iterators. Moving <code class="docutils literal notranslate"><span class="pre">.join()</span></code> to the sequence ABC would result in losing important functionality, and require that an iterable be turned into a sequence before joining it – a potentially significant performance hit, and contrary to python 3’s design.
-Having <code class="docutils literal notranslate"><span class="pre">.join()</span></code> as both a list and string method would create confusion for little gain.</li>
+Having <code class="docutils literal notranslate"><span class="pre">.join()</span></code> as both a list and string method would create confusion for little gain.</p></li>
 </ol>
 <p class="rubric">Authorship</p>
 <p>Christopher H. Barker: <code class="docutils literal notranslate"><span class="pre">PythonCHB&#64;gmail.com</span></code></p>

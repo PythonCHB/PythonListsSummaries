@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Inheritance Terminology &mdash; Python List Summaries 0.1.0 documentation</title>
+  <title>I’m new to Python, where do I start? &mdash; Python List Summaries 0.1.0 documentation</title>
   
 
   
@@ -35,8 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Why does __ne__ exist?" href="why_does___ne___exist.html" />
-    <link rel="prev" title="Native object exposing buffer protocol" href="native_buffer_protocol.html" /> 
+    <link rel="prev" title="What is the purpose of __version__ in the standard library?" href="purpose_of___version___in_std_library.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,14 +84,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../python_ideas/index.html">Python-ideas</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Python-list</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="native_buffer_protocol.html">Native object exposing buffer protocol</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Python Inheritance Terminology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#responses">responses</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_terminology.html">Python Inheritance Terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="why_does___ne___exist.html">Why does <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> exist?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="where_did_csv_parser_go.html">Where did csv.parser() go?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="purpose_of___version___in_std_library.html">What is the purpose of <code class="docutils literal notranslate"><span class="pre">__version__</span></code> in the standard library?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="new_to_python_where_start.html">I’m new to Python, where do I start?</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">I’m new to Python, where do I start?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-core-syntax-and-constructs">The core syntax and constructs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#built-in-functions">Built In Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-standard-library">The standard library</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -142,13 +143,13 @@
         
           <li><a href="index.html">Python-list</a> &raquo;</li>
         
-      <li>Python Inheritance Terminology</li>
+      <li>I’m new to Python, where do I start?</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/python_list/inheritance_terminology.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/python_list/new_to_python_where_start.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -161,39 +162,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="python-inheritance-terminology">
-<h1>Python Inheritance Terminology<a class="headerlink" href="#python-inheritance-terminology" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://mail.python.org/pipermail/python-list/2018-January/729897.html">https://mail.python.org/pipermail/python-list/2018-January/729897.html</a></p>
-<p>I’m doing some writing for an upcoming course on OOP using Python.</p>
-<p>I have been doing OOP programming for many years in many different languages, and I want make sure that I’m using the appropriate terminology in Python.  I’d like to know if there are “official” or even standard terms that are used to describe a class that is inherited from, and the class that is doing the inheriting.  From my reading (especially the PSF docs.python.org <a class="reference external" href="http://docs.python.org/">http://docs.python.org/</a>, it looks like the terms would be “base class” and “subclass”.</p>
-<p>However, in books about Python and other languages, I have also seen the terms:</p>
-<p>base class &amp; derived class
-parent class &amp; child class
-superclass &amp; subclass</p>
-<p>So, are base class &amp; subclass the proper terms?</p>
-<div class="section" id="responses">
-<h2>responses<a class="headerlink" href="#responses" title="Permalink to this headline">¶</a></h2>
-<p><strong>1.</strong></p>
-<p>Standard (“official”) terms are most likely to be had from the language
-reference <a class="reference external" href="http://docs.python.org/3/reference/">http://docs.python.org/3/reference/</a>. I would recommend
-the glossary <a class="reference external" href="http://docs.python.org/3/glossary.html">http://docs.python.org/3/glossary.html</a>, but with the
-caveat that many flaws have been found in recent years.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; However, in books about Python and other languages, I have also seen the terms:
-&gt;
-&gt; base class &amp; derived class
-&gt; parent class &amp; child class
-&gt; superclass &amp; subclass
-</pre></div>
+  <div class="section" id="i-m-new-to-python-where-do-i-start">
+<h1>I’m new to Python, where do I start?<a class="headerlink" href="#i-m-new-to-python-where-do-i-start" title="Permalink to this headline">¶</a></h1>
+<p>Well learning Python as such requires learning 3 things:</p>
+<ul class="simple">
+<li><p>The core syntax and constructs</p></li>
+<li><p>In-built functions</p></li>
+<li><p>The standard library</p></li>
+</ul>
+<div class="section" id="the-core-syntax-and-constructs">
+<h2>The core syntax and constructs<a class="headerlink" href="#the-core-syntax-and-constructs" title="Permalink to this headline">¶</a></h2>
+<p>Python provides a tutorial <a class="reference external" href="https://docs.python.org/3/tutorial/index.html">here</a></p>
+<p>It’s an awesome resource to get started. It’s the official tutorial!</p>
 </div>
-<p>The only term I take issue with there is “superclass”. In a
-multiple-inheritance system, such as provided by Python, the superclass
-is <em>not</em> necessarily the base class. See this article from 2011
-<a class="reference external" href="https://rhettinger.wordpress.com/2011/05/26/super-considered-super/">https://rhettinger.wordpress.com/2011/05/26/super-considered-super/</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; So, are base class &amp; subclass the proper terms?
-</pre></div>
+<div class="section" id="built-in-functions">
+<h2>Built In Functions<a class="headerlink" href="#built-in-functions" title="Permalink to this headline">¶</a></h2>
+<p>Python has many built-in functions to ease your life. You can view them <a class="reference external" href="https://docs.python.org/3/library/functions.html">here</a></p>
 </div>
-<p>In my opinion you will be correct to use those terms. Which is not to
-say that other terms aren’t also good.</p>
+<div class="section" id="the-standard-library">
+<h2>The standard library<a class="headerlink" href="#the-standard-library" title="Permalink to this headline">¶</a></h2>
+<p>To get a full peak at the standard library, see <a class="reference external" href="https://docs.python.org/3/library/index.html">here</a></p>
+<p>Authorship: Abdur-Rahmaan Janhangeer &lt;<a class="reference external" href="mailto:arj&#46;python&#37;&#52;&#48;gmail&#46;com">arj<span>&#46;</span>python<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
 </div>
 </div>
 
@@ -205,10 +194,8 @@ say that other terms aren’t also good.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="why_does___ne___exist.html" class="btn btn-neutral float-right" title="Why does __ne__ exist?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="native_buffer_protocol.html" class="btn btn-neutral float-left" title="Native object exposing buffer protocol" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="purpose_of___version___in_std_library.html" class="btn btn-neutral float-left" title="What is the purpose of __version__ in the standard library?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

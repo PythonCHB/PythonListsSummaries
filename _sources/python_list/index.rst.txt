@@ -21,3 +21,4 @@ The following are summaries of commonly asked questions of general interest:
    why_does___ne___exist
    where_did_csv_parser_go
    purpose_of___version___in_std_library
+   new_to_python_where_start

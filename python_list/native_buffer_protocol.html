@@ -98,6 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="why_does___ne___exist.html">Why does <code class="docutils literal notranslate"><span class="pre">__ne__</span></code> exist?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="where_did_csv_parser_go.html">Where did csv.parser() go?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="purpose_of___version___in_std_library.html">What is the purpose of <code class="docutils literal notranslate"><span class="pre">__version__</span></code> in the standard library?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="new_to_python_where_start.html">I’m new to Python, where do I start?</a></li>
 </ul>
 </li>
 </ul>
@@ -190,23 +191,24 @@ lot of extraneous copies.</p>
 <div class="section" id="id2">
 <h3>2.<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div>&gt; I’d like to create a native Python object that exposes the buffer
+<div><p>&gt; I’d like to create a native Python object that exposes the buffer
 &gt; protocol.  Basically, something with a ._data member which is a
 bytearray that I can still readinto, make directly into a numpy array,
-etc.</div></blockquote>
+etc.</p>
+</div></blockquote>
 <p>The “etc.” seems pretty important, there. You want the behaviour of
 ‘bytearray’ without actually inheriting that behaviour from the
 ‘bytearray’ type.</p>
 <p>So, it seems your options are:</p>
 <ul class="simple">
-<li>Enumerate all the things, specifically, that you do want your new type
+<li><p>Enumerate all the things, specifically, that you do want your new type
 to do. Don’t hide anything in “etc.”, so that you know exactly what
 behaviours need to be implemented. Implement all those behaviours,
-without benefit of inheriting from <code class="docutils literal notranslate"><span class="pre">bytearray</span></code>.</li>
-<li>Inherit from <code class="docutils literal notranslate"><span class="pre">bytearray</span></code>, but ameliorate the problems you want to
+without benefit of inheriting from <code class="docutils literal notranslate"><span class="pre">bytearray</span></code>.</p></li>
+<li><p>Inherit from <code class="docutils literal notranslate"><span class="pre">bytearray</span></code>, but ameliorate the problems you want to
 avoid. This will require enumerating all those problems, so that you
 can know whether you have avoided them. Don’t hide any of them in an
-“etc.”.</li>
+“etc.”.</p></li>
 </ul>
 <p>&gt; Not the end of the world (the file’s less than 2KB), but it seems like
 &gt; something that should be doable easily without having to throw around
@@ -216,9 +218,10 @@ can know whether you have avoided them. Don’t hide any of them in an
 <div class="section" id="author">
 <h3>3. author<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div>The “etc.” seems pretty important, there. You want the behaviour of
+<div><p>The “etc.” seems pretty important, there. You want the behaviour of
 ‘bytearray’ without actually inheriting that behaviour from the
-‘bytearray’ type. &gt;</div></blockquote>
+‘bytearray’ type. &gt;</p>
+</div></blockquote>
 <p>Well, one specific behavior.  Ideally, what I want is, when calls like
 RawIOBase.readinto and ndarray.frombuffer ask my class “Hey, do you have
 any raw bytes that I can read and potentially write?” it can answer “Why

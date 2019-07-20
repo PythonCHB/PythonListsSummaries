@@ -16,10 +16,10 @@ Python provides a tutorial `here <https://docs.python.org/3/tutorial/index.html>
 
 It's an awesome resource to get started. It's the official tutorial!
 
-In-built functions
+Built In Functions
 ^^^^^^^^^^^^^^^^^^
 
-Python has many in-built functions to ease your life. You can view them `here <https://docs.python.org/3/library/functions.html>`_
+Python has many built-in functions to ease your life. You can view them `here <https://docs.python.org/3/library/functions.html>`_
 
 The standard library
 ^^^^^^^^^^^^^^^^^^^^

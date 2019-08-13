@@ -18,4 +18,5 @@ But many other discussions result in a rejection of the idea, or peter out witho
    :caption: Contents:
 
    join_as_a_list_method
+   stdlib_module
 

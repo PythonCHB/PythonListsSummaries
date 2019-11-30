@@ -34,12 +34,14 @@ please post and issue, or better yet, a PR on this repo.
 How These Docs are Built
 ------------------------
 
-These pages are built with the `Sphinx Documentation System <http://www.sphinx-doc.org/en/master/>`_
+These pages are built with the
+`Sphinx Documentation System <http://www.sphinx-doc.org/en/master/>`_
 
 Sphinx is widely used in the Python Community, so a good choice for these pages,
 and a valuable tool to learn for any Pythonista.
 
-Sphinx pages are written using `Restructured Text <http://docutils.sourceforge.net/rst.html`_,
+Sphinx pages are written using
+`Restructured Text <http://docutils.sourceforge.net/rst.html>`_,
 a text-based markup format similar to Markdown.
 
 Refer to the Sphinx docs for details, but in short:

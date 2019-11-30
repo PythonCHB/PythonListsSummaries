@@ -1,11 +1,18 @@
-# PythonListsSummaries
+.. image:: https://travis-ci.org/PythonCHB/PythonListsSummaries.svg?branch=master
+    :target: https://travis-ci.org/PythonCHB/PythonListsSummaries
+
+####################
+PythonListsSummaries
+####################
+
 A set of pages summarizing discussion on major Python mailing lists.
 
 Published here:
 
 https://pythonchb.github.io/PythonListsSummaries/
 
-## Project Motivation
+Project Motivation
+==================
 
 The Python mailing lists are a real treasure trove with gems scattered here and there. Unfortunately, this mine of info lays hidden, buried as years pass by.
 
@@ -17,40 +24,46 @@ This project aims at providing rich articles summarizing threads, a reference fo
 
 For how it started, please refer [here](https://mail.python.org/pipermail/python-ideas/2019-March/056071.html) and [here](https://mail.python.org/pipermail/python-ideas/2019-March/056123.html).
 
-## Contributing
+Contributing
+============
 
 These pages are intended to be community supported.  If you have a new page
 you'd like to contribute, or have suggestions for improving existing pages,
 please post and issue, or better yet, a PR on this repo.
 
-### How These Docs are Built
+How These Docs are Built
+------------------------
 
-These pages are built with the [Sphinx Documentation System](http://www.sphinx-doc.org/en/master/)
+These pages are built with the `Sphinx Documentation System <http://www.sphinx-doc.org/en/master/>`_
 
-Sphinx is widely used in the Python Community, so a good choice for these pages, and a valuable tool to learn for any Pythonista.
+Sphinx is widely used in the Python Community, so a good choice for these pages,
+and a valuable tool to learn for any Pythonista.
 
-Sphinx pages are written using [Restructured Text](http://docutils.sourceforge.net/rst.html), a text-based markup format similar to Markdown.
+Sphinx pages are written using `Restructured Text <http://docutils.sourceforge.net/rst.html`_,
+a text-based markup format similar to Markdown.
+
 Refer to the Sphinx docs for details, but in short:
 
-#### Building the docs:
+Building the docs:
+------------------
 
-You need to have sphinx installed, which you can do with:
+You need to have sphinx installed, which you can do with::
 
-```
-pip install -r requirements.txt
-```
+    pip install -r requirements.txt
 
-You can then build the docs with:
 
-```
-make html
-```
+You can then build the docs with::
 
-It's a good idea to build them on your local machine to make sure that you are happy with the formatting before making a PR to the repo.
-The published version is built automatically by Travis CI when new content is pushed to master.
-See the `.travis.yml` file for how that's done.
+    make html
 
-### Adding a new page
+It's a good idea to build them on your local machine to make sure that you are
+happy with the formatting before making a PR to the repo. The published version
+is built automatically by Travis CI when new content is pushed to master.
+
+See the ``.travis.yml`` file for how that's done.
+
+Adding a new page
+-----------------
 
 For working with git, gitHub, and Pull Requests, see other sources -- google is your friend.
 

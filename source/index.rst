@@ -12,6 +12,10 @@ The goal is for folks new to a list with a common question / issue to be able to
 
 This is a community supported project -- it will only be as good the level of contribution it receives.
 
+If you are interested in contributing, these pages are manged on gitHub:
+
+https://github.com/PythonCHB/PythonListsSummaries
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

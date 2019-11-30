@@ -9,7 +9,7 @@ None the less, folks, often new to the language, sometimes find naming conventio
 Why not a new name?
 ===================
 
-There are a lot of good reasons not to change names. In a thread about changing the name of ``json.loads`` -- a number of good expainatinos where provided:
+There are a lot of good reasons not to change names. In a thread about changing the name of ``json.loads`` -- a number of good explanations where provided:
 
 https://mail.python.org/archives/list/python-ideas@python.org/thread/EJTIVQ2ZFSVHALTLRGFCOMOYGZYMKGQU/
 

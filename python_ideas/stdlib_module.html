@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Stdlib Module &mdash; Python List Summaries 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python-list" href="../python_list/index.html" />
+    <link rel="prev" title="Join as a list method" href="join_as_a_list_method.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python List Summaries
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python-ideas</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="better_name.html">Add a Better Name?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_as_a_list_method.html">Join as a list method</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Stdlib Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-the-stdlib">Defining the stdlib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advantages-of-having-a-stdlib-module">Advantages of having a stdlib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#concerns">Concerns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ideas-and-implementations">Ideas and Implementations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python_list/index.html">Python-list</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python List Summaries</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Python-ideas</a> &raquo;</li>
+        
+      <li>Stdlib Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/python_ideas/stdlib_module.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="stdlib-module">
+<h1>Stdlib Module<a class="headerlink" href="#stdlib-module" title="Permalink to this headline">¶</a></h1>
+<p>This summarises what was described <a class="reference external" href="https://mail.python.org/archives/list/python-ideas&#64;python.org/thread/XSYEVRPJQUX7VBTPNIJMUFZQIZ7WLOQU/">here</a> .</p>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>Proposal: Adding a stdlib module to the standard library</p>
+</div>
+<div class="section" id="defining-the-stdlib">
+<h2>Defining the stdlib<a class="headerlink" href="#defining-the-stdlib" title="Permalink to this headline">¶</a></h2>
+<p>Would the stdlib module be OS-independent or not? A better approach would be to go along the standard modules as defined in the <a class="reference external" href="https://docs.python.org/3/library/index.html">docs</a> . You get to know all modules within the stdlib, it even lists curses on windows (see benefit at 2. below) with info. But it does not let you access it if you want to use it when importing. Same for the third issue:</p>
+<p>The third issue is alternative Python implementations, discussed at concerns no.2.</p>
+</div>
+<div class="section" id="advantages-of-having-a-stdlib-module">
+<h2>Advantages of having a stdlib module<a class="headerlink" href="#advantages-of-having-a-stdlib-module" title="Permalink to this headline">¶</a></h2>
+<p>Below are some benefits of having such a module:</p>
+<ul class="simple">
+<li><p>1 Knowing what module can be imported without installing</p></li>
+</ul>
+<p>This can be useful for interactive learning. Like with the inbuilt builtins library, one get to know what builtins are there in Python, though it’s not the lib’s only use. In the spirit of the keyword module, it can also check if an import forms part of the std lib</p>
+<ul class="simple">
+<li><p>2 Check for accidental name collisions</p></li>
+</ul>
+<p>It might come in handy to check for python platform collisions. An intersection between their modules will do the job</p>
+<ul class="simple">
+<li><p>3 Namespaced imports</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+</pre></div>
+</div>
+<p>could be used as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stdlib</span><span class="o">.</span><span class="n">math</span>
+</pre></div>
+</div>
+<p>to better distinguish.</p>
+</div>
+<div class="section" id="concerns">
+<h2>Concerns<a class="headerlink" href="#concerns" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Backward compatibility</p></li>
+</ol>
+</li>
+</ul>
+<p>Python 4.0 codes might contain codes incompatible with previous versions</p>
+<ul class="simple">
+<li><ol class="arabic simple" start="2">
+<li><p>Different standard modules</p></li>
+</ol>
+</li>
+</ul>
+<p>If a Python implementation adds in a module, would codes implementing</p>
+<p>stdlib.fancy_lib</p>
+<p>on a diffrent platform not get broken? That is essentially the same as executing curses on windows or RPi on Raspberry Pi * Raspian. Just like RPi codes would not run on a windows, similarly, stdlib.fancy_lib would not run on the standard C implementation.</p>
+</div>
+<div class="section" id="ideas-and-implementations">
+<h2>Ideas and Implementations<a class="headerlink" href="#ideas-and-implementations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Andrew Barnert implemented a <a class="reference external" href="https://github.com/abarnert/stdlib">version of stdlib</a> where you can import without having to imply where the module is meaning instead of from x.y import z, you do:</p></li>
+</ul>
+<p>from stdlib import z</p>
+<ul class="simple">
+<li><p>Each implementation could hardcode the names of std modules which could be accessed by stdlib for listing and imports</p></li>
+<li><p>Use what help(‘modules’) uses i.e pkgutil.walk_packages minus 3rd party modules</p></li>
+<li><p>This <a class="reference external" href="https://github.com/jackmaney/python-stdlib-list">stdlib implemenation</a> from Jack Maney essentially hardcodes the libs like <a class="reference external" href="https://github.com/jackmaney/python-stdlib-list/blob/master/stdlib_list/lists/3.7.txt">here</a>.</p></li>
+<li><p>The real implementation is up to … be implemented.</p></li>
+</ul>
+<p>Draft containing inputs from:</p>
+<ul class="simple">
+<li><p>Andrew Barnert</p></li>
+<li><p>Chris Angelico</p></li>
+<li><p>Christopher Barker</p></li>
+<li><p>Steve Barnes</p></li>
+<li><p>Steven D’Aprano</p></li>
+</ul>
+<p>Abdur-Rahmaan Janhangeer: <code class="docutils literal notranslate"><span class="pre">arj.python&#64;gmail.com</span></code></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../python_list/index.html" class="btn btn-neutral float-right" title="Python-list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="join_as_a_list_method.html" class="btn btn-neutral float-left" title="Join as a list method" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Christopher Barker and Community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

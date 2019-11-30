@@ -228,7 +228,7 @@ any raw bytes that I can read and potentially write?” it can answer “Why
 certainly, here they are.”  Something like a:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Thingy</span><span class="p">:</span>
    <span class="k">def</span> <span class="nf">__memoryview__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-     <span class="k">return</span> <span class="n">memoryview</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+     <span class="k">return</span> <span class="nb">memoryview</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>But it doesn’t look as if there’s a dunder for that.  There’s <code class="docutils literal notranslate"><span class="pre">__bytes__</span></code>, but that specifically requires you give back a bytes() object; even

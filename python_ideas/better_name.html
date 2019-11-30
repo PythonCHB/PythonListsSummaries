@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Add a Better Name? &mdash; Python List Summaries 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Join as a list method" href="join_as_a_list_method.html" />
+    <link rel="prev" title="Python-ideas" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Python List Summaries
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python-ideas</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Add a Better Name?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-not-a-new-name">Why not a new name?</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#steven-d-aprano-wrote">Steven D’Aprano Wrote:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#andrew-barnert-wrote">Andrew Barnert wrote:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stephen-j-turnbull-wrote">Stephen J. Turnbull wrote:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#chris-angelico-wrote">Chris Angelico wrote:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Stephen J. Turnbull wrote:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="join_as_a_list_method.html">Join as a list method</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../python_list/index.html">Python-list</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Python List Summaries</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Python-ideas</a> &raquo;</li>
+        
+      <li>Add a Better Name?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/python_ideas/better_name.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="add-a-better-name">
+<h1>Add a Better Name?<a class="headerlink" href="#add-a-better-name" title="Permalink to this headline">¶</a></h1>
+<p>One issue that often comes up on <code class="docutils literal notranslate"><span class="pre">python-ideas</span></code> is to provide a “better” name for a module, function, etc in the standard library.  The truth is that “<em>naming is hard</em>”, and the standard library was built up over the years and may not have ideal names for everything.  But while most would agree that many current names are not great, there are a lot of good reasons <em>not</em> to change names just to get a better name.</p>
+<p>None the less, folks, often new to the language, sometimes find naming conventions confusing, and suggest that they be changed. The community is not completely opposed to these ideas, but there is a high bar to accept a change, just to provide a “better” name, even if everyone agrees that it is better.</p>
+<div class="section" id="why-not-a-new-name">
+<h2>Why not a new name?<a class="headerlink" href="#why-not-a-new-name" title="Permalink to this headline">¶</a></h2>
+<p>There are a lot of good reasons not to change names. In a thread about changing the name of <code class="docutils literal notranslate"><span class="pre">json.loads</span></code> – a number of good expainatinos where provided:</p>
+<p><a class="reference external" href="https://mail.python.org/archives/list/python-ideas&#64;python.org/thread/EJTIVQ2ZFSVHALTLRGFCOMOYGZYMKGQU/">https://mail.python.org/archives/list/python-ideas&#64;python.org/thread/EJTIVQ2ZFSVHALTLRGFCOMOYGZYMKGQU/</a></p>
+<p>Reading the thread is instructive, and not everyone agreed that``loads`` is a bad name, but here are a number of the key points provided that apply to any addition or changing of a name:</p>
+<div class="section" id="steven-d-aprano-wrote">
+<h3>Steven D’Aprano Wrote:<a class="headerlink" href="#steven-d-aprano-wrote" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>I agree with you that this is a sub-optimal naming convention, and we
+would have been better if a different choice was made at the beginning.
+But unfortunately it is a widely used naming convention:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pickle</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">marshall</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">json</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">yaml</span></code> (I think)</p></li>
+<li><p>and probably more</p></li>
+</ul>
+<p>and not just in Python. But I agree with the others that the pain and
+disruption from changing it is greater than the benefit. We all just
+have to memorize that “loads” means “load-string” and not the present
+tense of load.</p>
+</div></blockquote>
+</div>
+<div class="section" id="andrew-barnert-wrote">
+<h3>Andrew Barnert wrote:<a class="headerlink" href="#andrew-barnert-wrote" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>a previous poster wrote:</dt><dd><p>&gt; I’d be +1 on adding a better named alias for loading
+&gt; strings to all of these libraries.</p>
+</dd>
+</dl>
+<p>Including the ones that aren’t in the stdlib? If so, how do we do that?</p>
+<p>If not, won’t it be even more confusing for people who learn json.load_string when they
+go to use PyYAML and there’s no yaml.load_string? Sure, they’ll complain to the PyYAML
+devs, and eventually, most of the most common libraries will catch up, but you’re talking
+about a few years of extra confusion before you get the long-term benefits.</p>
+<p>Also, all the existing code, tutorials, StackOverflow answers, etc. that uses loads
+will still be using loads, so most people are going to have to learn what it means
+anyway.</p>
+<p>People are still getting confused over find_all vs. findall and writing StackOverflow
+questions asking why some module is giving them a NameError when they try to use findall a
+decade later. And the same is true for some of the pep8-naming changes that came with 3.0;
+you can still find StackOverflow questions where the accepted answer on the canonical duplicate
+question says to use threading.currentThread even though current_thread was added, and
+currentThread turned into a compatibility alias, back in 2.6.</p>
+<p>So the Very Good Thing isn’t actually as good as you’d hope—people will still have to
+learn loads—and the downsides are bigger than they appear at first—it will be a years-long
+process to get the entire Python ecosystem consistent on a new naming convention.</p>
+<p>That doesn’t mean it definitely isn’t worth doing, but it does mean you need to argue
+that it’s compelling enough to be worth the tradeoff anyway, rather than ignoring the cost
+and arguing as if we had a time machine and could go back to whenever pickle was added and
+change history to avoid all the downsides.</p>
+</div></blockquote>
+</div>
+<div class="section" id="stephen-j-turnbull-wrote">
+<h3>Stephen J. Turnbull wrote:<a class="headerlink" href="#stephen-j-turnbull-wrote" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>a previous poster wrote:</dt><dd><p>&gt; So I’m still +1. Just add the better named function as an option
+&gt; and be done with it; other than adding it to the docs, leave
+&gt; everything else as it is.</p>
+</dd>
+</dl>
+<p>I would find this very annoying, because I believe it would lead to
+widespread namespace pollution.  I use dir() a lot to remind myself of
+APIs, and aliases that would confuse me and slow reading (I’m old
+enough to have vision issues) would anger me.</p>
+<p>…</p>
+<p>I’m basically -1 on any aliasing.  I think there’s way too many that
+have been proposed.  I can’t see a way limit them that doesn’t read
+“screw you” to the proposals that are denied, and it would be a burden
+on me, it would cause confusion, and I don’t think the benefits are
+likely to be great.</p>
+</div></blockquote>
+</div>
+<div class="section" id="chris-angelico-wrote">
+<h3>Chris Angelico wrote:<a class="headerlink" href="#chris-angelico-wrote" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt>a previous poster wrote:</dt><dd><p>&gt; One of them can maybe be deprecated
+&gt; <code class="docutils literal notranslate"><span class="pre">json.load(&lt;string</span> <span class="pre">here&gt;)</span></code>
+&gt; for file:
+&gt; <code class="docutils literal notranslate"><span class="pre">json.load(file=&lt;file</span> <span class="pre">obj&gt;)</span></code></p>
+</dd>
+</dl>
+<p>Deprecation is not a solution. You’re still going to have stuff out
+there using the old name (Stack Overflow posts, blogs, articles,
+books, etc etc etc etc), and people will have to learn the meaning
+of both. Additionally, churn like this - renaming things for no reason
+other than “the new name is somehow better” - tends to create the
+sense that the language is constantly in flux, and that today’s code
+is going to be broken tomorrow. Imagine a Stack Overflow answer that
+has to be edited to say “For Python versions up to 3.8, use
+json.loads; for versions 3.9 and up, use json.load_string”, and then
+if it uses a couple of other APIs that have been renamed, it needs to
+multiply that out exponentially… no thanks. I get enough of that
+from React.js.</p>
+<p>(-1) on renaming. (-1) on deprecating. (-1) on creating an unnecessary alias.</p>
+<dl class="simple">
+<dt>a previous poster wrote:</dt><dd><p>&gt; My personal feeling is that adding a significantly better name, and
+&gt; deprecating the old name (maybe never going past the state of
+&gt; documenting that it is deprecated and suggesting using the better
+&gt; name, one reason not to have an automatic removal of deprecated features) is
+&gt; viable if the name improvement is big enough.</p>
+</dd>
+</dl>
+<p>Perhaps, IF the improvement is big enough. A marginal improvement is
+not worth all that hassle. And if you keep both names, you forever
+have people wondering what the difference is.</p>
+<p>As an example, Python’s threading module has duplicate names e.g.
+“current_thread” and “currentThread”. The preferred names are
+documented up to and including Python 2.7, but they still exist in the
+latest 3.x.</p>
+<p>…</p>
+<p>a previous poster wrote:</p>
+<blockquote>
+<div><p>&gt; One issue is that since Python allows the user to
+&gt; monkey-patch library code, ANY expansion of name space is potentially
+&gt; breaking, Python has almost no namespace reserved for the language
+&gt; designers that users are allowed to intrude on (maybe dunders are
+&gt; reserved enough, but we don’t want to be using dunders as part of user
+&gt; accessed API). Which means that even if we deprecate <code class="docutils literal notranslate"><span class="pre">loads</span></code>, the standard
+&gt; library should continue to use it and not the new load_string for awhile
+&gt; until it is felt safe that few people are monkey patching in a
+&gt; load_string member, and we can break the code.</p>
+</div></blockquote>
+<p>I don’t think we need to worry about people poking arbitrary values
+into a stdlib module and breaking things. If someone’s doing that and
+their code breaks in Python 3.10, that’s on them.</p>
+</div></blockquote>
+</div>
+<div class="section" id="id1">
+<h3>Stephen J. Turnbull wrote:<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>You don’t have to like it.  I don’t think anybody likes suboptimal
+naming, they just like it better than they like backward-incompatible
+renames or namespace pollution.  You can’t really expect others to be
+happy with wholesale changes to the environment, even if they’re fully
+backward compatible as the proposals to add aliases for <code class="docutils literal notranslate"><span class="pre">json.loads</span></code> and
+<code class="docutils literal notranslate"><span class="pre">calendar.calendar</span></code> are.  (As usual, you can say “I just want these`
+two,” and we’ll respond “OK, but the community as a whole will want a
+million of them, we all have our favorites, and if we accept yours,
+how do we deny theirs?”)</p>
+</div></blockquote>
+<p class="rubric">Authorship</p>
+<p>Christopher H. Barker: <code class="docutils literal notranslate"><span class="pre">PythonCHB&#64;gmail.com</span></code></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="join_as_a_list_method.html" class="btn btn-neutral float-right" title="Join as a list method" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Python-ideas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Christopher Barker and Community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
